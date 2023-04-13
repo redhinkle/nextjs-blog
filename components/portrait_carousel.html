@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.slim.min.js"
+      integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      #image {
+        /* width: 400px; */
+        height: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <p><input type="button" value="Pause" id="play_pause" /></p> -->
+    <p>
+      <img
+        src="./rocky-beach-selangor-sunset-portrait-orientation-136485682.jpg"
+        alt=""
+        id="image"
+      />
+    </p>
+    <!-- <p><span id="caption">img</span></p> -->
+    <script>
+      const createSlideshow = function () {
+        let timer,
+          play = true,
+          speed = 2000;
+        let nodes = { image: null, caption: null };
+        let img = { cache: [], counter: 0 };
+
+        // const stopSlideshow = () => {
+        //   clearInterval(timer);
+        // };
+
+        let displatyNextImage = () => {
+          img.counter = ++img.counter % img.cache.length;
+          let image = img.cache[img.counter];
+          nodes.image.attr("src", image.src);
+          nodes.caption.text(image.title);
+        };
+
+        return {
+          loadImages: function (slides) {
+            let image;
+            for (let i = 0; i < slides.length; i++) {
+              image = new Image();
+              image.src = "./" + slides[i].href;
+              image.title = slides[i].title;
+              img.cache.push(image);
+            }
+            return this;
+          },
+          startSlideshow: function () {
+            if (arguments.length == 2) {
+              nodes.image = arguments[0];
+              nodes.caption = arguments[1];
+            }
+            timer = setInterval(displatyNextImage, speed);
+            return this;
+          },
+          //   createToggleHandler: function () {
+          //     let me = this;
+          //     return function () {
+          //       if (play) {
+          //         stopSlideshow();
+          //       } else {
+          //         me.startSlideshow();
+          //       }
+          //       this.value = play ? "Resume" : "Pause";
+          //       play = !play;
+          //     };
+          //   },
+        };
+      };
+
+      $(document).ready(function () {
+        const slideshow = createSlideshow();
+        const slides = [
+          { href: "photo-1553061599-86c4cfa449d9.jpg", title: "1" },
+          {
+            href: "rocky-beach-selangor-sunset-portrait-orientation-136485682.jpg",
+            title: "2",
+          },
+        ];
+        // $("#play_pause").click(slideshow.createToggleHandler());
+        slideshow.loadImages(slides).startSlideshow($("#image"), $("#caption"));
+      });
+    </script>
+  </body>
+</html>
